@@ -1,108 +1,138 @@
-# MicroGestor - Sistema de Gestão Financeira para Microempreendedores Informais
+# MicroGestor - Sistema de Gestão Financeira para Microempreendedores
 
-> **AEP (Atividade de Estudo Programada) – 2º Bimestre / 2026.2**  
-> **Instituição:** UniCesumar (Maringá - PR)  
-> **Cursos Integrados:** Engenharia de Software (Esoft) & Análise e Desenvolvimento de Sistemas (ADS)  
-> **Alinhamento:** ODS 8 da ONU – Trabalho Decente e Crescimento Econômico  
-
----
-
-## 👥 Integrantes da Equipe
-
-| Nome Completo | Registro Acadêmico (RA) | Função Principal no Desenvolvimento |
-| :--- | :--- | :--- |
-| **Eduardo André A. de Sant’Ana** | `25016225-2` | Arquitetura POO, Entidades de Domínio e Relatórios |
-| **Kauan Maniezo de Souza** | `25001222-2` | Camada DAO, Transações JDBC e Modelagem MySQL |
-| **Patrick Takeo dos Santos Oda** | `25362798-2` | Interface CLI de Console, Validações e Regras de Negócio |
-
-**Repositório Oficial:** [github.com/eduuusantana/aep-microgestor](https://github.com/eduuusantana/aep-microgestor)
+Atividade de Estudo Programada (AEP) - 2º Bimestre / 2026.2  
+UniCesumar - Centro Universitário Cesumar (Maringá - PR)  
+Cursos: Engenharia de Software e Análise e Desenvolvimento de Sistemas  
+Alinhamento: ODS 8 - Trabalho Decente e Crescimento Econômico  
 
 ---
 
-## 🎯 Sobre o Projeto
+## 1. Integrantes da Equipe
 
-O **MicroGestor** é uma aplicação em **Java (Console / Terminal CLI)** projetada para microempreendedores informais do setor alimentício (ex.: venda de doces caseiros, bolos de pote e salgados). O sistema soluciona dores críticas desse público:
-1. **Controle de Produtos e Cardápio:** CRUD completo para precificação e gerenciamento.
-2. **Registro Rápido de Vendas:** Suporte a múltiplos itens com composição (1:N) e controle de pagamentos (PIX, Dinheiro, Cartão e Fiado).
-3. **Registro de Despesas:** Acompanhamento de compras de insumos e embalagens.
-4. **Fechamento de Caixa Automatizado:** Cálculo de receitas, despesas, lucro líquido real e valores pendentes no "fiado".
+* **Eduardo André A. de Sant'Ana** - RA: 25016225-2
+* **Kauan Maniezo de Souza** - RA: 25001222-2
+* **Patrick Takeo dos Santos Oda** - RA: 25362798-2
 
----
-
-## 🏛️ Pilares da Programação Orientada a Objetos (POO) Aplicados
-
-1. **Abstração:**
-   - Classe abstrata `TransacaoFinanceira` com o método abstrato `public abstract double processarNoCaixa()`.
-2. **Herança:**
-   - `Receita` herda de `TransacaoFinanceira`.
-   - `Despesa` herda de `TransacaoFinanceira`.
-   - `Venda` herda de `Receita` (especialização comercial).
-3. **Polimorfismo:**
-   - Implementação de `@Override` no método `processarNoCaixa()`:
-     - `Receita` retorna `+valorTotal`.
-     - `Despesa` retorna `-valorTotal`.
-   - A classe de serviço `CaixaService` processa listas heterogêneas de transações sem acoplamento.
-4. **Composição (1:N):**
-   - A classe `Venda` é composta por uma lista de `ItemVenda` (`List<ItemVenda>`), onde cada item calcula seu subtotal e referencia o `Produto` correspondente.
-5. **Encapsulamento e Boas Práticas:**
-   - Atributos privados/protegidos, acessíveis apenas via getters/setters com validações estritas (impedindo valores negativos ou nomes em branco).
-   - Nomenclatura aderente ao padrão *CamelCase* e convenções da linguagem Java.
+Repositório: https://github.com/eduuusantana/aep-microgestor
 
 ---
 
-## 🗄️ Banco de Dados (MySQL / XAMPP)
+## 2. Visão Geral do Sistema
 
-O sistema utiliza persistência real via **JDBC** conectado ao **MySQL**. O script de criação das tabelas e carga inicial está localizado em:
-📂 `database/schema.sql`
+O MicroGestor é uma aplicação desenvolvida em Java com interface via Console (Terminal CLI), voltada para microempreendedores informais do setor de alimentos artesanais (como pequenos produtores de bolos, doces e salgados). 
 
-### Estrutura das Tabelas:
-- **`produto`**: `id` (INT AUTO_INCREMENT PK), `nome` (VARCHAR), `preco_base` (DECIMAL).
-- **`transacao`**: `id` (INT AUTO_INCREMENT PK), `tipo_transacao` (VARCHAR), `data_registro` (DATE), `valor_total` (DECIMAL), `forma_pagamento` (VARCHAR), `cliente` (VARCHAR), `fornecedor` (VARCHAR), `categoria` (VARCHAR).
-- **`item_venda`**: `id` (INT AUTO_INCREMENT PK), `transacao_id` (FK), `produto_id` (FK), `quantidade` (INT), `preco_unitario` (DECIMAL).
+O sistema visa solucionar a desorganização de registros financeiros em cadernos, a mistura de receitas do negócio com gastos pessoais e as perdas financeiras decorrentes de vendas a prazo ("fiado"). A solução automatiza o fluxo de entradas e saídas, permitindo o acompanhamento do saldo líquido real e dos valores a receber.
 
----
-
-## 🚀 Como Configurar e Executar com XAMPP
-
-### 1. Pré-requisitos
-- **Java JDK:** Versão 8 ou superior instalado.
-- **XAMPP:** Com o módulo **MySQL** ativo.
-- Qualquer IDE Java moderna (**IntelliJ IDEA, Eclipse, NetBeans ou VS Code**).
-
-### 2. Configurando o Banco de Dados no XAMPP / phpMyAdmin
-1. Abra o **XAMPP Control Panel** e clique em **Start** no módulo **MySQL**.
-2. Abra seu navegador e acesse: [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
-3. No menu lateral esquerdo, clique em **Novo (New)**.
-4. Digite o nome da base de dados: `microgestor_db` e clique em **Criar**.
-5. Clique na aba **SQL** no topo da página.
-6. Copie e cole todo o conteúdo do arquivo `database/schema.sql` e clique em **Executar (Go)**.
-
-> As credenciais padrão do XAMPP já estão configuradas no arquivo `src/main/resources/db.properties` (usuário: `root`, sem senha).
+### Requisitos Funcionais Contemplados:
+* **RF01:** Cadastro, listagem, atualização e exclusão de produtos com nome e preço base (CRUD completo).
+* **RF02:** Registro de vendas com composição de múltiplos itens e cálculo automático de subtotais e totais.
+* **RF03:** Registro de despesas categorizadas (insumos, embalagens, utilidades e transporte).
+* **RF04:** Registro da forma de pagamento utilizada (PIX, Dinheiro, Cartão ou Fiado).
+* **RF05:** Relatório consolidado de fechamento de caixa, demonstrando total de entradas, total de saídas, saldo líquido do período e valores pendentes no fiado.
 
 ---
 
-### 3. Executando o Projeto
+## 3. Arquitetura e Orientação a Objetos
 
-#### Pela IDE (Recomendado):
-1. Abra a pasta do projeto na sua IDE.
-2. Aguarde o Maven carregar a dependência `mysql-connector-j`.
-3. Navegue até `src/main/java/br/com/microgestor/app/Main.java`.
-4. Clique com o botão direito e selecione **Run 'Main.main()'**.
+O projeto foi estruturado seguindo os princípios da Programação Orientada a Objetos e o padrão de arquitetura em camadas (Model, DAO, Service e App/View):
+
+* **Abstração:** A classe abstrata `TransacaoFinanceira` centraliza os atributos comuns de movimentações financeiras (`id`, `dataRegistro`, `valorTotal`, `formaPagamento`) e declara o método abstrato `public abstract double processarNoCaixa()`.
+* **Herança:** As classes `Receita` e `Despesa` herdam diretamente de `TransacaoFinanceira`. A classe `Venda` especializa `Receita`, incorporando o comportamento de comercialização com carrinho.
+* **Polimorfismo:** Sobrescrita (`@Override`) do método `processarNoCaixa()`. Instâncias de `Receita` somam valor ao caixa, enquanto instâncias de `Despesa` subtraem valor. O `CaixaService` processa listas polimórficas de transações sem necessidade de acoplamento direto.
+* **Composição (1:N):** A classe `Venda` possui uma composição com `ItemVenda` (`List<ItemVenda>`), onde cada item calcula seu subtotal multiplicando quantidade pelo preço unitário e referencia a entidade `Produto`.
+* **Encapsulamento:** Todos os atributos possuem visibilidade restrita (private/protected) com métodos de acesso (getters/setters) e validações de integridade de dados (bloqueio de valores negativos e strings vazias).
 
 ---
 
-## 📋 Divisão de Commits para a Equipe no Git
+## 4. Banco de Dados
 
-Para garantir a nota máxima no critério de versionamento em equipe:
+A persistência é realizada em banco de dados relacional MySQL via JDBC. O script de inicialização encontra-se em `database/schema.sql`.
 
-1. **Commit 1 - Eduardo André (Model & POO):**
-   - Arquivos: `pom.xml`, `.gitignore`, `src/main/java/br/com/microgestor/model/`
-   - Mensagem: `feat(model): classes de dominio com abstracao, heranca e composicao`
+### Esquema Relacional:
+* **`produto`:** Armazena o catálogo de itens comercializados (`id`, `nome`, `preco_base`).
+* **`transacao`:** Armazena as movimentações financeiras de receitas, vendas e despesas (`id`, `tipo_transacao`, `data_registro`, `valor_total`, `forma_pagamento`, `cliente`, `fornecedor`, `categoria`).
+* **`item_venda`:** Tabela associativa que implementa a composição da venda (`id`, `transacao_id`, `produto_id`, `quantidade`, `preco_unitario`), contendo restrição de integridade referencial com exclusão em cascata (`ON DELETE CASCADE`).
 
-2. **Commit 2 - Kauan Maniezo (DAO & MySQL):**
-   - Arquivos: `database/schema.sql`, `src/main/resources/`, `src/main/java/br/com/microgestor/dao/`
-   - Mensagem: `feat(dao): persistencia mysql e conexao jdbc com controle transacional`
+---
 
-3. **Commit 3 - Patrick Takeo (Service, CLI & Documentação):**
-   - Arquivos: `src/main/java/br/com/microgestor/service/`, `src/main/java/br/com/microgestor/app/`, `README.md`
-   - Mensagem: `feat(cli): menu interativo de console, fechamento de caixa e manual`
+## 5. Cronograma e Entregas das Sprints
+
+Conforme planejado no documento do 1º Bimestre, o desenvolvimento foi distribuído entre os membros da equipe:
+
+| Sprint | Período | Módulo / Responsabilidade | Integrante Responsável |
+| :--- | :--- | :--- | :--- |
+| **Sprint 1** | 01/10 a 15/10 | Modelagem da classe `Produto` e implementação das operações de CRUD (`ProdutoDAO`). | Patrick |
+| **Sprint 2** | 16/10 a 30/10 | Motor Financeiro: classe abstrata `TransacaoFinanceira`, herança e polimorfismo (`Receita`, `Despesa`, `Venda`, `ItemVenda`). | Kauan |
+| **Sprint 3** | 01/11 a 15/11 | Modelagem relacional, script SQL (`schema.sql`) e persistência JDBC com controle transacional (`DatabaseConnection`, `TransacaoDAO`). | Eduardo |
+| **Sprint 4** | 16/11 a 25/11 | Fechamento de caixa (`CaixaService`), interface interativa de console (`Main`), testes integrados e documentação final. | Todos |
+
+---
+
+## 6. Instruções de Instalação e Execução
+
+### Pré-requisitos:
+* Java JDK versão 8 ou superior instalado.
+* Servidor MySQL ativo (porta 3306). Recomendado o uso do XAMPP.
+* Maven (opcional, caso execute via linha de comando) ou IDE com suporte a Maven (IntelliJ IDEA, Eclipse, VS Code ou NetBeans).
+
+### Configuração do Banco de Dados:
+1. Inicie o serviço MySQL no painel de controle do XAMPP.
+2. Acesse a interface administrativa (phpMyAdmin em `http://localhost/phpmyadmin` ou terminal MySQL).
+3. Crie a base de dados:
+   ```sql
+   CREATE DATABASE microgestor_db;
+   ```
+4. Execute o script contido no arquivo `database/schema.sql` na base criada.
+
+As configurações de conexão encontram-se em `src/main/resources/db.properties` (usuário padrão `root`, sem senha, porta 3306).
+
+### Execução da Aplicação:
+
+#### Via IDE (IntelliJ / Eclipse / VS Code):
+1. Abra a pasta do projeto como um projeto Maven.
+2. Aguarde o download das dependências declaradas no `pom.xml` (`mysql-connector-j`).
+3. Localize e execute o arquivo `src/main/java/br/com/microgestor/app/Main.java`.
+
+#### Via Linha de Comando (Maven):
+```bash
+mvn clean package
+java -jar target/microgestor-app-1.0.0.jar
+```
+
+---
+
+## 7. Estrutura de Diretórios
+
+```text
+aep-microgestor/
+├── pom.xml
+├── README.md
+├── .gitignore
+├── database/
+│   └── schema.sql
+├── docs/
+│   ├── AEP1 - ESOFT4SN.pdf
+│   ├── diagrama_banco_der.png
+│   └── diagrama_classes_uml.png
+└── src/
+    └── main/
+        ├── resources/
+        │   └── db.properties
+        └── java/
+            └── br/com/microgestor/
+                ├── model/
+                │   ├── Produto.java
+                │   ├── TransacaoFinanceira.java
+                │   ├── Receita.java
+                │   ├── Despesa.java
+                │   ├── Venda.java
+                │   └── ItemVenda.java
+                ├── dao/
+                │   ├── DatabaseConnection.java
+                │   ├── ProdutoDAO.java
+                │   └── TransacaoDAO.java
+                ├── service/
+                │   └── CaixaService.java
+                └── app/
+                    └── Main.java
+```
